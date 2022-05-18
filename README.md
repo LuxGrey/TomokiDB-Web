@@ -2,39 +2,25 @@
 
 This is the web-app version of TomokiDB, a tool that can be used to store, organize and query weblinks.
 
-## Requirements
+**This project is still in the early stages of development on not yet ready for its intended use.**
 
-JRE 11 or higher
+Additional infos about this project that are not included in this README can be found here:
 
-## How to run
+- [My design decisions](DesignDecisions.md)
 
-Run the application with `backend/mvnw spring-boot:run`
+## Running from source
 
-Alternatively, you can build the JAR file with `backend/mvnw clean package` and then run the JAR file with `java -jar <path-to-JAR-file>`
+### Requirements
 
-## Application design decisions
+- JDK 11 or higher
+- Node.js
+- NPM or Yarn
 
-This section is only relevant for those who're curious about my thoughts and decisions
-regarding how and why I decided to implement TomokiDB-Web in this way.
+### How to run
 
-### Why make it a web-app?
+Inside `/frontend` install the dependencies for the frontend with `npm install`
+and then build it with `npm run build` (or use the Yarn equivalents for these).
 
-The answer is quite simple. I initially tried to create a desktop app with GUI using JavaFX,
-but didn't get very far, because I constantly ran into difficulties.
-Since I have more experience with web-frontend-technologies and since additional practice
-with these would likely be of value for my current job, I decided to write a (locally run) web-app.
+Afterwards, run the backend Java-app inside `/backend` with `./mvnw spring-boot:run`
 
-### Why use Apache Derby instead of any other database system?
-
-I want this app to be comfortable to use and set up, which means that it should have
-as few requirements for execution on a user's device as possible.
-Because of this, I went with an embedded database system, which does not require users
-to install a database system and keep it running themselves.
-
-I chose Apache Derby over the seemingly more popular SQLite because it seems to be easier to
-integrate into the rest of my application (Java, JPA).
-
-### Why use CSR instead of SSR?
-
-Client-side rendering seems to be the norm in modern web-development and it also allows me
-to practice creating REST-APIs and make use of Vue.js, which, again, is useful for my job.
+Alternatively, you can build the JAR file with `./mvnw clean package` and then run the JAR file with `java -jar <path-to-JAR-file>`
