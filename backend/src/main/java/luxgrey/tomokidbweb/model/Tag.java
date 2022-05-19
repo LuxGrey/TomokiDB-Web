@@ -3,6 +3,7 @@ package luxgrey.tomokidbweb.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +28,11 @@ public class Tag {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
+
+  // name column should be unique, as it does not make sense for there to be duplicate tags
+  // unique constraint is only used during DDL generation
+  @Column(unique=true)
+  private String name;
 
   @ManyToMany
   private List<Profile> profiles = new ArrayList<>();

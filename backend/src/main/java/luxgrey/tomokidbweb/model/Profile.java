@@ -41,9 +41,9 @@ public class Profile {
   @ManyToMany
   // define unqiue constraint to prevent duplicates of profile-tag relationships
   // unique constraint is only used during DDL generation
-  @JoinTable (name = "profile_tags",
-      joinColumns = @JoinColumn(name="profile_id"),
-      inverseJoinColumns = @JoinColumn(name="tag_id"),
+  @JoinTable(name = "profile_tags",
+      joinColumns = @JoinColumn(name = "profile_id"),
+      inverseJoinColumns = @JoinColumn(name = "tag_id"),
       uniqueConstraints = @UniqueConstraint(columnNames = {"profile_id", "tag_id"})
   )
   private List<Tag> tags = new ArrayList<>();
