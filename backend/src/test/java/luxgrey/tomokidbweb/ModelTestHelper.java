@@ -44,7 +44,7 @@ public class ModelTestHelper {
 
     for (int i = 0; i < amount; i++) {
       Tag tag = new Tag();
-      tag.setName("Tag" + amount);
+      tag.setName("Tag" + i);
       tags.add(tag);
     }
 
