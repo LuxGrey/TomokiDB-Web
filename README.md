@@ -18,11 +18,11 @@ Additional infos about this project that are not included in this README can be 
 
 ### How to run
 
-### Build Frontend
+#### Build Frontend
 Inside `/frontend` install the dependencies for the frontend with `npm install`
 and then build it with `npm run build` (or use the Yarn equivalents for these).
 
-### Build and run Backend
+#### Build and run Backend
 For the backend, you can use one of the `mvnw`-scripts provided with the project.
 
 Run the backend Java-app inside `/backend` with `./mvnw spring-boot:run`.
