@@ -7,7 +7,7 @@ import luxgrey.tomokidbweb.model.Alias;
 import luxgrey.tomokidbweb.model.Profile;
 import luxgrey.tomokidbweb.model.Tag;
 import luxgrey.tomokidbweb.repository.ProfileRepository;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,32 +31,32 @@ public class ProfileRepositoryIntegrationTests {
   @Test
   public void whenFindAllPaginated_thenReturnPageWithCorrectAmount() {
     // preparation
-    final int amountProfiles = 10;
-    final int page = 0;
-    final int pageSize = 5;
+    final int AMOUNT_PROFILES = 10;
+    final int PAGE = 0;
+    final int PAGE_SIZE = 5;
     List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
-        amountProfiles, 2, 3);
+        AMOUNT_PROFILES, 2, 3);
     for (Profile p : profiles) {
       testEntityManager.persist(p);
     }
     testEntityManager.flush();
 
     // test
-    Pageable pageable = PageRequest.of(page, pageSize);
+    Pageable pageable = PageRequest.of(PAGE, PAGE_SIZE);
 
     Page<Profile> profilePage = profileRepository.findAll(pageable);
 
-    Assert.assertEquals(pageSize, profilePage.getNumberOfElements());
-    Assert.assertEquals(amountProfiles, profilePage.getTotalElements());
+    Assertions.assertEquals(PAGE_SIZE, profilePage.getNumberOfElements());
+    Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
   }
 
   @Test
   public void whenFindByAliasAndTagIdsPaginated_withoutAliasOrTagIds_thenReturnPageWithCorrectAmount() {
     // preparation
-    final int amountProfiles = 10;
-    final int page = 0;
-    final int pageSize = 5;
-    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(amountProfiles, 2,
+    final int AMOUNT_PROFILES = 10;
+    final int PAGE = 0;
+    final int PAGE_SIZE = 5;
+    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(AMOUNT_PROFILES, 2,
         3);
     for (Profile p : profiles) {
       testEntityManager.persist(p);
@@ -64,105 +64,105 @@ public class ProfileRepositoryIntegrationTests {
     testEntityManager.flush();
 
     // test
-    Pageable pageable = PageRequest.of(page, pageSize);
+    Pageable pageable = PageRequest.of(PAGE, PAGE_SIZE);
 
     Page<Profile> profilePage = profileRepository.findByAliasAndTagIds(pageable, null, null);
 
-    Assert.assertEquals(pageSize, profilePage.getNumberOfElements());
-    Assert.assertEquals(amountProfiles, profilePage.getTotalElements());
+    Assertions.assertEquals(PAGE_SIZE, profilePage.getNumberOfElements());
+    Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
   }
 
   @Test
   public void whenFindByAliasAndTagIdsPaginated_withAliasAndTagIds_thenReturnPageWithCorrectAmount() {
-    final int amountProfiles = 10;
-    final int amountTags = 6;
-    final String expectedAliasName = "SpecialAlias";
-    final int[] profileIndicesWithSoughtAlias = {0, 1, 2, 3,};
-    final int[] soughtTagIndices = {1, 4, 5};
-    final int[] profileIndicesWithSoughtTags = {2, 3, 4, 5};
-    final int page = 0;
-    final int pageSize = 5;
+    final int AMOUNT_PROFILES = 10;
+    final int AMOUNT_TAGS = 6;
+    final String EXPECTED_ALIAS_NAME = "SpecialAlias";
+    final int[] PROFILE_INDICES_WITH_SOUGHT_ALIAS = {0, 1, 2, 3,};
+    final int[] SOUGHT_TAG_INDICES = {1, 4, 5};
+    final int[] PROFILE_INDICES_WITH_SOUGHT_TAGS = {2, 3, 4, 5};
+    final int PAGE = 0;
+    final int PAGE_SIZE = 5;
     // overlap between Profiles with sought Tags and Profiles with sought Alias
     final int expectedAmountResults = 2;
 
     List<Long> soughtTagIds = prepareDatabaseForFindByAliasAndTagIdsTest(
-        amountProfiles,
-        amountTags,
-        expectedAliasName,
-        profileIndicesWithSoughtAlias,
-        soughtTagIndices,
-        profileIndicesWithSoughtTags
+        AMOUNT_PROFILES,
+        AMOUNT_TAGS,
+        EXPECTED_ALIAS_NAME,
+        PROFILE_INDICES_WITH_SOUGHT_ALIAS,
+        SOUGHT_TAG_INDICES,
+        PROFILE_INDICES_WITH_SOUGHT_TAGS
     );
 
-    Pageable pageable = PageRequest.of(page, pageSize);
+    Pageable pageable = PageRequest.of(PAGE, PAGE_SIZE);
 
     Page<Profile> profilePage = profileRepository.findByAliasAndTagIds(
-        pageable, expectedAliasName, soughtTagIds);
+        pageable, EXPECTED_ALIAS_NAME, soughtTagIds);
 
-    Assert.assertEquals(expectedAmountResults, profilePage.getNumberOfElements());
-    Assert.assertEquals(amountProfiles, profilePage.getTotalElements());
+    Assertions.assertEquals(expectedAmountResults, profilePage.getNumberOfElements());
+    Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
   }
 
   @Test
   public void whenFindByAliasAndTagIsPaginated_withAliasWithoutTagIds_thenReturnPageWithCorrectAmount() {
-    final int amountProfiles = 10;
-    final int amountTags = 0;
-    final String expectedAliasName = "SpecialAlias";
-    final int[] profileIndicesWithSoughtAlias = {0, 1, 2, 3,};
-    final int[] soughtTagIndices = {};
-    final int[] profileIndicesWithSoughtTags = {};
-    final int page = 0;
-    final int pageSize = 5;
+    final int AMOUNT_PROFILES = 10;
+    final int AMOUNT_TAGS = 0;
+    final String EXPECTED_ALIAS_NAME = "SpecialAlias";
+    final int[] PROFILE_INDICES_WITH_SOUGHT_ALIAS = {0, 1, 2, 3,};
+    final int[] SOUGHT_TAG_INDICES = {};
+    final int[] PROFILE_INDICES_WITH_SOUGHT_TAGS = {};
+    final int PAGE = 0;
+    final int PAGE_SIZE = 5;
     // Profiles with sought Alias
     final int expectedAmountResults = 4;
 
     prepareDatabaseForFindByAliasAndTagIdsTest(
-        amountProfiles,
-        amountTags,
-        expectedAliasName,
-        profileIndicesWithSoughtAlias,
-        soughtTagIndices,
-        profileIndicesWithSoughtTags
+        AMOUNT_PROFILES,
+        AMOUNT_TAGS,
+        EXPECTED_ALIAS_NAME,
+        PROFILE_INDICES_WITH_SOUGHT_ALIAS,
+        SOUGHT_TAG_INDICES,
+        PROFILE_INDICES_WITH_SOUGHT_TAGS
     );
 
-    Pageable pageable = PageRequest.of(page, pageSize);
+    Pageable pageable = PageRequest.of(PAGE, PAGE_SIZE);
 
     Page<Profile> profilePage = profileRepository.findByAliasAndTagIds(
-        pageable, expectedAliasName, null);
+        pageable, EXPECTED_ALIAS_NAME, null);
 
-    Assert.assertEquals(expectedAmountResults, profilePage.getNumberOfElements());
-    Assert.assertEquals(amountProfiles, profilePage.getTotalElements());
+    Assertions.assertEquals(expectedAmountResults, profilePage.getNumberOfElements());
+    Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
   }
 
   @Test
   public void whenFindByAliasAndTagIdsPaginated_withoutAliasWithTagIds_thenReturnPageWithCorrectAmount() {
-    final int amountProfiles = 10;
-    final int amountTags = 6;
-    final String expectedAliasName = null;
-    final int[] profileIndicesWithSoughtAlias = {};
-    final int[] soughtTagIndices = {1, 4, 5};
-    final int[] profileIndicesWithSoughtTags = {2, 3, 4, 5};
-    final int page = 0;
-    final int pageSize = 5;
+    final int AMOUNT_PROFILES = 10;
+    final int AMOUNT_TAGS = 6;
+    final String EXPECTED_ALIAS_NAME = null;
+    final int[] PROFILE_INDICES_WITH_SOUGHT_ALIAS = {};
+    final int[] SOUGHT_TAG_INDICES = {1, 4, 5};
+    final int[] PROFILE_INDICES_WITH_SOUGHT_TAGS = {2, 3, 4, 5};
+    final int PAGE = 0;
+    final int PAGE_SIZE = 5;
     // overlap between Profiles with sought Tags and Profiles with sought Alias
     final int expectedAmountResults = 4;
 
     List<Long> soughtTagIds = prepareDatabaseForFindByAliasAndTagIdsTest(
-        amountProfiles,
-        amountTags,
-        expectedAliasName,
-        profileIndicesWithSoughtAlias,
-        soughtTagIndices,
-        profileIndicesWithSoughtTags
+        AMOUNT_PROFILES,
+        AMOUNT_TAGS,
+        EXPECTED_ALIAS_NAME,
+        PROFILE_INDICES_WITH_SOUGHT_ALIAS,
+        SOUGHT_TAG_INDICES,
+        PROFILE_INDICES_WITH_SOUGHT_TAGS
     );
 
-    Pageable pageable = PageRequest.of(page, pageSize);
+    Pageable pageable = PageRequest.of(PAGE, PAGE_SIZE);
 
     Page<Profile> profilePage = profileRepository.findByAliasAndTagIds(
-        pageable, expectedAliasName, soughtTagIds);
+        pageable, EXPECTED_ALIAS_NAME, soughtTagIds);
 
-    Assert.assertEquals(expectedAmountResults, profilePage.getNumberOfElements());
-    Assert.assertEquals(amountProfiles, profilePage.getTotalElements());
+    Assertions.assertEquals(expectedAmountResults, profilePage.getNumberOfElements());
+    Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
   }
 
   /**
