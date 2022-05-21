@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import luxgrey.tomokidbweb.annotation.Generated;
 import org.hibernate.Hibernate;
 
 /**
@@ -37,6 +38,7 @@ public class Tag {
   @ManyToMany
   private List<Profile> profiles = new ArrayList<>();
 
+  @Generated
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -49,6 +51,7 @@ public class Tag {
     return id != null && Objects.equals(id, tag.id);
   }
 
+  @Generated
   @Override
   public int hashCode() {
     return getClass().hashCode();
