@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +19,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import luxgrey.tomokidbweb.annotation.Generated;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * Central entity of the application
@@ -33,15 +36,17 @@ public class Profile {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
+  @Fetch(value = FetchMode.SUBSELECT)
   private List<Alias> aliases = new ArrayList<>();
 
   @ElementCollection
   private List<Weblink> weblinks = new ArrayList<>();
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   // define unqiue constraint to prevent duplicates of profile-tag relationships
   // unique constraint is only used during DDL generation
+  @Fetch(value = FetchMode.SUBSELECT)
   @JoinTable(name = "profile_tags",
       joinColumns = @JoinColumn(name = "profile_id"),
       inverseJoinColumns = @JoinColumn(name = "tag_id"),
