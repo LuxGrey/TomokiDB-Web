@@ -1,5 +1,6 @@
 package luxgrey.tomokidbweb.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,8 @@ import org.hibernate.annotations.FetchMode;
 @Getter
 @Setter
 @NoArgsConstructor
+@Schema(description =
+    "Model that encompasses multiple aliases and weblinks and can be associated with tags")
 public class Profile {
 
   @Id
