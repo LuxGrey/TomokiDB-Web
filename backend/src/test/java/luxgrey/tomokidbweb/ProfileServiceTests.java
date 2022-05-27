@@ -31,7 +31,7 @@ public class ProfileServiceTests {
   @Test
   public void whenGetProfilesPage_thenProfilesPageReturned() {
     final String SOUGHT_ALIAS_NAME = "SpecialAlias";
-    final List<Long> SOUGHT_TAG_IDS = Arrays.asList(1L,3L);
+    final List<Long> SOUGHT_TAG_IDS = Arrays.asList(1L, 3L);
     final int PAGE = 0;
     final int PAGE_SIZE = 5;
 

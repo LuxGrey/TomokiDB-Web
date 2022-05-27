@@ -9,7 +9,6 @@ import luxgrey.tomokidbweb.model.Tag;
 import luxgrey.tomokidbweb.repository.ProfileRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -47,7 +46,7 @@ public class ProfileRepositoryIntegrationTests {
     Assertions.assertEquals(PAGE_SIZE, profilePage.getNumberOfElements());
     Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
   }
-  
+
   @Test
   public void whenFindAllPaginated_withPageOutOfRange_thenReturnEmptyPage() {
     // preparation
@@ -76,8 +75,8 @@ public class ProfileRepositoryIntegrationTests {
     final int AMOUNT_PROFILES = 10;
     final int PAGE = 0;
     final int PAGE_SIZE = 5;
-    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(AMOUNT_PROFILES, 2,
-        3);
+    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
+        AMOUNT_PROFILES, 2, 3);
     for (Profile p : profiles) {
       testEntityManager.persist(p);
     }
@@ -98,8 +97,8 @@ public class ProfileRepositoryIntegrationTests {
     final int AMOUNT_PROFILES = 10;
     final int PAGE = 20;
     final int PAGE_SIZE = 5;
-    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(AMOUNT_PROFILES, 2,
-        3);
+    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
+        AMOUNT_PROFILES, 2, 3);
     for (Profile p : profiles) {
       testEntityManager.persist(p);
     }
@@ -210,10 +209,10 @@ public class ProfileRepositoryIntegrationTests {
   /**
    * Sets up the database with data that are relevant for tests which test
    * findByAliasAndTagIds(...)
-   *
-   * WARNING: Ensure that you provide the indices-parameters with arguments that don't cause
-   * Index out of bounds Exceptions; amountProfiles and amountTags parameters determine the sizes
-   * of the respective collections
+   * <p>
+   * WARNING: Ensure that you provide the indices-parameters with arguments that don't cause Index
+   * out of bounds Exceptions; amountProfiles and amountTags parameters determine the sizes of the
+   * respective collections
    *
    * @param amountProfiles                number of profiles to generate
    * @param amountTags                    number of tags to generate
@@ -245,12 +244,12 @@ public class ProfileRepositoryIntegrationTests {
 
     // get IDs of sought Tags
     List<Long> soughtTagIds = new ArrayList<>();
-    for(int l : soughtTagIndices) {
+    for (int l : soughtTagIndices) {
       soughtTagIds.add(tags.get(l).getId());
     }
 
     // assign sought Aliases
-    if(soughtAliasName != null) {
+    if (soughtAliasName != null) {
       for (int i : profileIndicesWithSoughtAlias) {
         Alias alias = new Alias();
         alias.setName(soughtAliasName + i);
