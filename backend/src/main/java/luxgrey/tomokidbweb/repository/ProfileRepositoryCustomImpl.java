@@ -11,7 +11,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.Metamodel;
 import luxgrey.tomokidbweb.model.Alias;
 import luxgrey.tomokidbweb.model.Alias_;
 import luxgrey.tomokidbweb.model.Profile;
@@ -36,34 +35,31 @@ public class ProfileRepositoryCustomImpl implements ProfileRepositoryCustom {
   @Override
   public Page<Profile> findByAliasAndTagIds(
       Pageable pageable,
-      String alias,
+      String aliasName,
       Collection<Long> tagIds) {
     CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
     // get count of all Profiles
     Long profilesCount = getProfilesCount(criteriaBuilder);
 
-    // get filtered Profiles
     CriteriaQuery<Profile> criteriaQuery = criteriaBuilder.createQuery(Profile.class);
-    Metamodel metamodel = entityManager.getMetamodel();
 
     // build base query
     Root<Profile> profile = criteriaQuery.from(Profile.class);
     criteriaQuery.select(profile);
 
     // dynamically add query restrictions
-
     List<Predicate> predicates = new ArrayList<>();
-    if (alias != null) {
+    if (aliasName != null) {
       Join<Profile, Alias> aliasesJoin = profile.join(Profile_.aliases);
       predicates.add(
           criteriaBuilder.like(
-            // make comparison case-insensitive by converting both sides to lower-case
-            criteriaBuilder.lower(
-                aliasesJoin.get(Alias_.name)
-            ),
-            "%" + alias.toLowerCase() + "%"
-      ));
+              // make comparison case-insensitive by converting both sides to lower-case
+              criteriaBuilder.lower(
+                  aliasesJoin.get(Alias_.name)
+              ),
+              "%" + aliasName.toLowerCase() + "%"
+          ));
     }
     if (tagIds != null && !tagIds.isEmpty()) {
       Join<Profile, Tag> tagsJoin = profile.join(Profile_.tags);

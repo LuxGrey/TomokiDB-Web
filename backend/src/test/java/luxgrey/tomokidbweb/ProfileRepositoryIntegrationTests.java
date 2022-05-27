@@ -16,9 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 @DataJpaTest
 public class ProfileRepositoryIntegrationTests {
 
@@ -49,6 +47,28 @@ public class ProfileRepositoryIntegrationTests {
     Assertions.assertEquals(PAGE_SIZE, profilePage.getNumberOfElements());
     Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
   }
+  
+  @Test
+  public void whenFindAllPaginated_withPageOutOfRange_thenReturnEmptyPage() {
+    // preparation
+    final int AMOUNT_PROFILES = 10;
+    final int PAGE = 20;
+    final int PAGE_SIZE = 5;
+    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
+        AMOUNT_PROFILES, 2, 3);
+    for (Profile p : profiles) {
+      testEntityManager.persist(p);
+    }
+    testEntityManager.flush();
+
+    // test
+    Pageable pageable = PageRequest.of(PAGE, PAGE_SIZE);
+
+    Page<Profile> profilePage = profileRepository.findAll(pageable);
+
+    Assertions.assertEquals(0, profilePage.getNumberOfElements());
+    Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
+  }
 
   @Test
   public void whenFindByAliasAndTagIdsPaginated_withoutAliasOrTagIds_thenReturnPageWithCorrectAmount() {
@@ -69,6 +89,28 @@ public class ProfileRepositoryIntegrationTests {
     Page<Profile> profilePage = profileRepository.findByAliasAndTagIds(pageable, null, null);
 
     Assertions.assertEquals(PAGE_SIZE, profilePage.getNumberOfElements());
+    Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
+  }
+
+  @Test
+  public void whenFindByAliasAndTagIdsPaginated_withoutAliasOrTagIdsWithPageOutOfRange_thenReturnPageWithCorrectAmount() {
+    // preparation
+    final int AMOUNT_PROFILES = 10;
+    final int PAGE = 20;
+    final int PAGE_SIZE = 5;
+    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(AMOUNT_PROFILES, 2,
+        3);
+    for (Profile p : profiles) {
+      testEntityManager.persist(p);
+    }
+    testEntityManager.flush();
+
+    // test
+    Pageable pageable = PageRequest.of(PAGE, PAGE_SIZE);
+
+    Page<Profile> profilePage = profileRepository.findByAliasAndTagIds(pageable, null, null);
+
+    Assertions.assertEquals(0, profilePage.getNumberOfElements());
     Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
   }
 
