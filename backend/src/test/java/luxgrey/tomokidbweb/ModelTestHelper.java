@@ -16,10 +16,23 @@ public class ModelTestHelper {
       int amountProfiles,
       int aliasesPerProfile,
       int weblinksPerProfile) {
+    return createProfilesWithAliasesAndWeblinks(
+        amountProfiles, aliasesPerProfile, weblinksPerProfile, false);
+  }
+
+  public static List<Profile> createProfilesWithAliasesAndWeblinks(
+      int amountProfiles,
+      int aliasesPerProfile,
+      int weblinksPerProfile,
+      boolean assignIds) {
     List<Profile> profiles = new ArrayList<>();
 
     for (int i = 0; i < amountProfiles; i++) {
       Profile profile = new Profile();
+
+      if (assignIds) {
+        profile.setId((long) i + 1);
+      }
 
       for (int k = 0; k < aliasesPerProfile; k++) {
         Alias alias = new Alias();

@@ -17,6 +17,6 @@ public interface ProfileRepositoryCustom {
    */
   Page<Profile> findByAliasAndTagIds(
       Pageable pageable,
-      String alias,
+      String aliasName,
       Collection<Long> tagIds);
 }

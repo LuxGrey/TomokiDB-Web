@@ -35,3 +35,7 @@ Alternatively, you can build the JAR file with `./mvnw clean package` and then r
 ### Backend
 
 Inside `/backend` run `./mvnw test` to run the backend tests.
+
+## View backend API documentation
+
+While the backend is running, the API documentation can be viewed under [localhost:8080/swagger-ui/index.html]()
