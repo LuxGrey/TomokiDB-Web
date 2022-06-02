@@ -20,7 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
-public class ProfileServiceTests {
+public class ProfileServiceUnitTests {
 
   @Mock
   private ProfileRepository profileRepository;

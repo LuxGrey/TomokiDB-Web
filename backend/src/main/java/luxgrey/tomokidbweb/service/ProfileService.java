@@ -1,6 +1,7 @@
 package luxgrey.tomokidbweb.service;
 
 import java.util.Collection;
+import java.util.Optional;
 import luxgrey.tomokidbweb.model.Profile;
 import luxgrey.tomokidbweb.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,10 @@ public class ProfileService {
   @Autowired
   public ProfileService(ProfileRepository profileRepository) {
     this.profileRepository = profileRepository;
+  }
+
+  public Optional<Profile> getProfile(Long id) {
+    return profileRepository.findById(id);
   }
 
   public Page<Profile> getProfilesPageByAliasAndTagIds(

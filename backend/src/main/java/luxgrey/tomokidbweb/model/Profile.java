@@ -12,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.Getter;
@@ -29,14 +27,6 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "profiles")
-@NamedEntityGraph(
-    name = "Profile.details",
-    attributeNodes = {
-        @NamedAttributeNode("aliases"),
-        @NamedAttributeNode("weblinks"),
-        @NamedAttributeNode("tags")
-    }
-)
 @Getter
 @Setter
 @NoArgsConstructor

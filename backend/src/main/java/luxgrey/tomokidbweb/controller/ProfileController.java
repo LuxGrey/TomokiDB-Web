@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
+import java.util.Optional;
 import luxgrey.tomokidbweb.model.Profile;
 import luxgrey.tomokidbweb.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +29,26 @@ public class ProfileController {
   @Autowired
   public ProfileController(ProfileService profileService) {
     this.profileService = profileService;
+  }
+
+  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Get a Profile")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "ok"),
+      @ApiResponse(responseCode = "400", description = "bad request"),
+      @ApiResponse(responseCode = "404", description = "not found"),
+  })
+  public ResponseEntity<?> getProfileId(@PathVariable final Long id) {
+    if (id < 1L) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("bad request");
+    }
+
+    Optional<Profile> optionalProfile = profileService.getProfile(id);
+    if (optionalProfile.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found");
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(optionalProfile.get());
   }
 
   @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
