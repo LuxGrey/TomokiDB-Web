@@ -3,10 +3,12 @@ package luxgrey.tomokidbweb;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import luxgrey.tomokidbweb.model.Alias;
 import luxgrey.tomokidbweb.model.Profile;
 import luxgrey.tomokidbweb.model.Tag;
 import luxgrey.tomokidbweb.repository.ProfileRepository;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,6 +206,57 @@ public class ProfileRepositoryIntegrationTests {
 
     Assertions.assertEquals(expectedAmountResults, profilePage.getNumberOfElements());
     Assertions.assertEquals(AMOUNT_PROFILES, profilePage.getTotalElements());
+  }
+
+  @Test
+  public void whenFindById_withExistingId_thenReturnCorrectProfile() {
+    Profile expectedProfile = ModelTestHelper.createProfileWithAliasesAndWeblinks(1, 2, 1);
+    testEntityManager.persistAndFlush(expectedProfile);
+    final Long SOUGHT_ID = expectedProfile.getId();
+
+    Optional<Profile> optionalProfile = profileRepository.findById(SOUGHT_ID);
+
+    Assertions.assertTrue(optionalProfile.isPresent());
+    Assertions.assertEquals(expectedProfile, optionalProfile.get());
+  }
+
+  @Test
+  public void whenFindById_withExistingId_thenReturnProfileWithEagerLoadedRelationships() {
+    Profile expectedProfile = ModelTestHelper.createProfileWithAliasesAndWeblinks(1, 2, 1);
+    testEntityManager.persistAndFlush(expectedProfile);
+    final Long SOUGHT_ID = expectedProfile.getId();
+
+    Optional<Profile> optionalProfile = profileRepository.findById(SOUGHT_ID);
+
+    Assertions.assertTrue(optionalProfile.isPresent());
+
+    Profile profile = optionalProfile.get();
+    Assertions.assertTrue(Hibernate.isInitialized(profile.getAliases()));
+    Assertions.assertTrue(Hibernate.isInitialized(profile.getWeblinks()));
+    Assertions.assertTrue(Hibernate.isInitialized(profile.getTags()));
+  }
+
+  @Test
+  public void whenFindById_withNonExistingId_thenReturnEmpty() {
+    final Long SOUGHT_ID = 100L;
+    Optional<Profile> optionalProfile = profileRepository.findById(SOUGHT_ID);
+
+    Assertions.assertTrue(optionalProfile.isEmpty());
+  }
+
+  @Test
+  public void whenFindById_withNegativeId_thenReturnEmpty() {
+    final Long SOUGHT_ID = -100L;
+    Optional<Profile> optionalProfile = profileRepository.findById(SOUGHT_ID);
+
+    Assertions.assertTrue(optionalProfile.isEmpty());
+  }
+
+  @Test
+  public void whenFindById_withNullId_thenThrowException() {
+    final Long SOUGHT_ID = null;
+
+    Assertions.assertThrows(Exception.class, () -> profileRepository.findById(SOUGHT_ID));
   }
 
   /**

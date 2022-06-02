@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.Getter;
@@ -28,6 +29,14 @@ import org.hibernate.annotations.FetchMode;
  */
 @Entity
 @Table(name = "profiles")
+@NamedEntityGraph(
+    name = "Profile.details",
+    attributeNodes = {
+        @NamedAttributeNode("aliases"),
+        @NamedAttributeNode("weblinks"),
+        @NamedAttributeNode("tags")
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -39,14 +48,14 @@ public class Profile {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @ElementCollection(fetch = FetchType.EAGER)
+  @ElementCollection
   @Fetch(value = FetchMode.SUBSELECT)
   private List<Alias> aliases = new ArrayList<>();
 
   @ElementCollection
   private List<Weblink> weblinks = new ArrayList<>();
 
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany
   // define unqiue constraint to prevent duplicates of profile-tag relationships
   // unique constraint is only used during DDL generation
   @Fetch(value = FetchMode.SUBSELECT)
