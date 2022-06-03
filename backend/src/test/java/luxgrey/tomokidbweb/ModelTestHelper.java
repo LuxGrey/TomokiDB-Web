@@ -2,6 +2,7 @@ package luxgrey.tomokidbweb;
 
 import java.util.ArrayList;
 import java.util.List;
+import luxgrey.tomokidbweb.dto.ProfileDTOShort;
 import luxgrey.tomokidbweb.model.Alias;
 import luxgrey.tomokidbweb.model.Profile;
 import luxgrey.tomokidbweb.model.Tag;
@@ -28,7 +29,8 @@ public class ModelTestHelper {
     List<Profile> profiles = new ArrayList<>();
 
     for (int i = 0; i < amountProfiles; i++) {
-      Profile profile = createProfileWithAliasesAndWeblinks(aliasesPerProfile, weblinksPerProfile, i);
+      Profile profile = createProfileWithAliasesAndWeblinks(
+          aliasesPerProfile, weblinksPerProfile, i);
 
       if (assignIds) {
         profile.setId((long) i + 1);
@@ -40,10 +42,32 @@ public class ModelTestHelper {
     return profiles;
   }
 
+  public static List<ProfileDTOShort> createProfileDTOShortsWithAliases(
+      int amountProfiles,
+      int aliasesPerProfile,
+      boolean assignIds
+  ) {
+    List<ProfileDTOShort> profileDTOShorts = new ArrayList<>();
+
+    for (int i = 0; i < amountProfiles; i++) {
+      ProfileDTOShort profileDTOShort = new ProfileDTOShort();
+
+      for (int k = 0; k < aliasesPerProfile; k++) {
+        Alias alias = new Alias();
+        alias.setName("Alias" + i + "_" + k);
+        profileDTOShort.getAliases().add(alias);
+      }
+
+      profileDTOShorts.add(profileDTOShort);
+    }
+
+    return profileDTOShorts;
+  }
+
   /**
-   * @param uniqueNumberForProfile number used for generation of Alias names and Weblink URLs
-   *                               that must be unique across all profiles in order to satisfy
-   *                               uniqueness constraints of Aliases and Weblinks
+   * @param uniqueNumberForProfile number used for generation of Alias names and Weblink URLs that
+   *                               must be unique across all profiles in order to satisfy uniqueness
+   *                               constraints of Aliases and Weblinks
    */
   public static Profile createProfileWithAliasesAndWeblinks(
       int amountAliases,

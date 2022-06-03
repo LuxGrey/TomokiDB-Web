@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
 import java.util.Optional;
+import luxgrey.tomokidbweb.dto.ProfileDTOShort;
 import luxgrey.tomokidbweb.model.Profile;
 import luxgrey.tomokidbweb.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class ProfileController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("bad request");
     }
 
-    Page<Profile> profilesPage = profileService.getProfilesPageByAliasAndTagIds(
+    Page<ProfileDTOShort> profilesPage = profileService.getProfilesPageByAliasAndTagIds(
         page, pageSize, aliasName, tagIds
     );
 

@@ -2,6 +2,7 @@ package luxgrey.tomokidbweb.service;
 
 import java.util.Collection;
 import java.util.Optional;
+import luxgrey.tomokidbweb.dto.ProfileDTOShort;
 import luxgrey.tomokidbweb.model.Profile;
 import luxgrey.tomokidbweb.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,14 @@ public class ProfileService {
     return profileRepository.findById(id);
   }
 
-  public Page<Profile> getProfilesPageByAliasAndTagIds(
+  public Page<ProfileDTOShort> getProfilesPageByAliasAndTagIds(
       int pageStart, int pageSize, String aliasName, Collection<Long> tagIds) {
-    return profileRepository.findByAliasAndTagIds(
-        PageRequest.of(pageStart, pageSize),
-        aliasName,
-        tagIds
+    return ProfileDTOShort.toProfileDTOPage(
+        profileRepository.findByAliasAndTagIds(
+            PageRequest.of(pageStart, pageSize),
+            aliasName,
+            tagIds
+        )
     );
   }
 }

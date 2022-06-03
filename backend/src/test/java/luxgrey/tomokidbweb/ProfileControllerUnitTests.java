@@ -3,6 +3,7 @@ package luxgrey.tomokidbweb;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import luxgrey.tomokidbweb.dto.ProfileDTOShort;
 import luxgrey.tomokidbweb.model.Profile;
 import luxgrey.tomokidbweb.service.ProfileService;
 import org.junit.jupiter.api.Test;
@@ -70,11 +71,11 @@ public class ProfileControllerUnitTests {
   @Test
   public void givenProfiles_whenGetProfilesPageByAliasAndTagIds_withPageAndPageSize_thenStatus200()
       throws Exception {
-    List<Profile> profilesList = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
-        5, 2, 3, true);
-    Page<Profile> profilesPage = new PageImpl<>(profilesList);
+    List<ProfileDTOShort> profileDTOShortList = ModelTestHelper.createProfileDTOShortsWithAliases(
+        5, 2, true);
+    Page<ProfileDTOShort> profileDTOShortPage = new PageImpl<>(profileDTOShortList);
     Mockito.when(profileService.getProfilesPageByAliasAndTagIds(0, 5, null, null))
-        .thenReturn(profilesPage);
+        .thenReturn(profileDTOShortPage);
 
     this.mockMvc
         .perform(MockMvcRequestBuilders.get(PROFILES_BASE_URL + "?page=0&pageSize=5"))
@@ -84,8 +85,8 @@ public class ProfileControllerUnitTests {
   @Test
   public void givenNoProfiles_whenGetProfilesPageByAliasAndTagIds_withPageAndPageSize_thenStatus204()
       throws Exception {
-    List<Profile> emptyList = new ArrayList<>();
-    Page<Profile> emptyPage = new PageImpl<>(emptyList);
+    List<ProfileDTOShort> emptyList = new ArrayList<>();
+    Page<ProfileDTOShort> emptyPage = new PageImpl<>(emptyList);
     Mockito.when(profileService.getProfilesPageByAliasAndTagIds(0, 5, null, null))
         .thenReturn(emptyPage);
 

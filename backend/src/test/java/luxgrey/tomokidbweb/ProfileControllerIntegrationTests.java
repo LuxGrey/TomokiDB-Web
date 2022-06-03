@@ -31,7 +31,7 @@ public class ProfileControllerIntegrationTests {
   private TestEntityManager testEntityManager;
 
   @Test
-  public void givenProfile_whenGetProfile_withValidId_thenResponseBodyHasLoadedRelationships()
+  public void givenProfile_whenGetProfile_withValidId_thenResponseBodyHasLoadedAllRelationships()
       throws Exception {
     final int AMOUNT_ALIASES = 2;
     final int AMOUNT_WEBLINKS = 4;
@@ -56,5 +56,44 @@ public class ProfileControllerIntegrationTests {
         .andExpect(MockMvcResultMatchers.jsonPath("tags").isArray())
         .andExpect(MockMvcResultMatchers.jsonPath("tags.size()").value(AMOUNT_TAGS))
         .andExpect(MockMvcResultMatchers.jsonPath("tags[0].profiles").isEmpty());
+  }
+
+  @Test
+  public void givenProfiles_whenGetProfilesPageByAliasAndTagIds_withPageAndPageSize_thenResponseBodyHasLoadedCorrectRelationships()
+      throws Exception {
+    final int AMOUNT_PROFILES = 2;
+    final int AMOUNT_ALIASES_PER_PROFILE = 2;
+    final int AMOUNT_WEBLINKS_PER_PROFILE = 4;
+    final int AMOUNT_TAGS = 3;
+
+    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
+        AMOUNT_PROFILES, AMOUNT_ALIASES_PER_PROFILE, AMOUNT_WEBLINKS_PER_PROFILE);
+    List<Tag> tags = ModelTestHelper.createTags(AMOUNT_TAGS);
+    for (Tag tag : tags) {
+      testEntityManager.persist(tag);
+    }
+
+    profiles.get(0).getTags().add(tags.get(0));
+    profiles.get(0).getTags().add(tags.get(1));
+    profiles.get(1).getTags().add(tags.get(2));
+
+    for (Profile profile : profiles) {
+      testEntityManager.persist(profile);
+    }
+    testEntityManager.flush();
+
+    this.mockMvc
+        .perform(MockMvcRequestBuilders.get(PROFILES_BASE_URL + "?page=0&pageSize=5"))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("content").isArray())
+        .andExpect(MockMvcResultMatchers.jsonPath("content.size()").value(AMOUNT_PROFILES))
+        .andExpect(MockMvcResultMatchers.jsonPath("content[0].aliases").isArray())
+        .andExpect(MockMvcResultMatchers.jsonPath("content[0].aliases.size()")
+            .value(AMOUNT_ALIASES_PER_PROFILE))
+        .andExpect(MockMvcResultMatchers.jsonPath("content[0].tags").isArray())
+        .andExpect(MockMvcResultMatchers.jsonPath("content[0].tags.size()")
+            .value(2))
+        .andExpect(MockMvcResultMatchers.jsonPath("content[0].weblinks").doesNotExist())
+        .andExpect(MockMvcResultMatchers.jsonPath("content[0].note").doesNotExist());
   }
 }
