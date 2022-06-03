@@ -38,6 +38,8 @@ public class Profile {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  private String note;
+
   @ElementCollection
   @Fetch(value = FetchMode.SUBSELECT)
   private List<Alias> aliases = new ArrayList<>();
