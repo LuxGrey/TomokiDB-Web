@@ -41,12 +41,12 @@ public class ProfileController {
   })
   public ResponseEntity<?> getProfileId(@PathVariable final Long id) {
     if (id < 1L) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("bad request");
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     Optional<Profile> optionalProfile = profileService.getProfile(id);
     if (optionalProfile.isEmpty()) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found");
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     return ResponseEntity.status(HttpStatus.OK).body(optionalProfile.get());
@@ -66,7 +66,7 @@ public class ProfileController {
       @RequestParam(required = false) final Collection<Long> tagIds) {
 
     if (page < 0 || pageSize < 1) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("bad request");
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     Page<ProfileDTOShort> profilesPage = profileService.getProfilesPageByAliasAndTagIds(
@@ -74,7 +74,7 @@ public class ProfileController {
     );
 
     if (profilesPage.isEmpty()) {
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).body("no content");
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
     return ResponseEntity.status(HttpStatus.OK).body(profilesPage);
