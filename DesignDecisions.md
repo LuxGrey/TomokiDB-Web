@@ -1,7 +1,8 @@
 # Design decisions
 
 This document provides some explanations about my thoughts and decisions
-regarding how and why I decided to implement TomokiDB-Web in this way.
+regarding how and why I decided to implement TomokiDB-Web in this way,
+both as a reminder for myself and for whoever is interested.
 
 ## Why make it a web-app?
 
@@ -24,3 +25,15 @@ integrate into the rest of my application (Java, JPA).
 
 Client-side rendering seems to be the norm in modern web-development and it also allows me
 to practice creating REST-APIs and make use of Vue.js, which, again, is useful for my job.
+
+## Why not use JSON Schema for advanced validation?
+
+At some point I sought for a way to validate the JSON that this project's backend consumes
+in ways that were advanced enough that they seemed to go beyond the capabilities of the
+Javax validation constraints and the Fasterxml Jackson annotations.
+
+On my search I came across [JSON Schema](https://json-schema.org/), which was quite intriguing
+and seemed perfectly suitable for my needs.
+Halfway through my implementation with this approach I realised that things were getting a bit too
+complicated, so I instead opted to validate and manipulate the models generated from the
+JSON with Java code, even if that may be a less performant and clean solution.
