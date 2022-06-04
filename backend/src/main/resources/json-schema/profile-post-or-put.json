@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "profile-post-or-put",
+  "type": "object",
+  "properties": {
+    "note": {
+      "type": "string"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": ["name"]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "weblinks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": ["url"]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["id"]
+          },
+          {
+            "type": "object",
+            "required": ["name"]
+          }
+        ]
+      },
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "aliases",
+    "weblinks"
+  ]
+}
