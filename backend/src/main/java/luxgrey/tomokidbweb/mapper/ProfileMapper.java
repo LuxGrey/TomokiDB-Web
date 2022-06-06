@@ -1,6 +1,6 @@
 package luxgrey.tomokidbweb.mapper;
 
-import luxgrey.tomokidbweb.dto.ProfileDTONoId;
+import luxgrey.tomokidbweb.dto.ProfileDTOPostOrPut;
 import luxgrey.tomokidbweb.dto.ProfileDTOShort;
 import luxgrey.tomokidbweb.model.Profile;
 import org.mapstruct.Mapper;
@@ -18,5 +18,6 @@ public interface ProfileMapper {
   }
 
   @Mapping(target = "id", ignore = true)
-  Profile toProfile(ProfileDTONoId profileDTONoId);
+  @Mapping(target = "tags", ignore = true)
+  Profile toProfile(ProfileDTOPostOrPut profileDTOPostOrPut);
 }
