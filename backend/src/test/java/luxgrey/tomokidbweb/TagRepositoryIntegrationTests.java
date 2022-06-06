@@ -33,9 +33,7 @@ public class TagRepositoryIntegrationTests {
     soughtTagIds.add(persistedTagIds.get(0)); // duplicate
     soughtTagIds.add(persistedTagIds.get(1));
 
-    List<Tag> resultTags = tagRepository.findByIdIn(soughtTagIds);
-    Assertions.assertFalse(resultTags.isEmpty());
-    Assertions.assertEquals(2, resultTags.size());
+    Assertions.assertEquals(2, tagRepository.countByIdIn(soughtTagIds));
   }
 
   @Test
