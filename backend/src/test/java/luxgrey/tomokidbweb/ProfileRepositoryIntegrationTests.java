@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -256,7 +257,55 @@ public class ProfileRepositoryIntegrationTests {
   public void whenFindById_withNullId_thenThrowException() {
     final Long SOUGHT_ID = null;
 
-    Assertions.assertThrows(Exception.class, () -> profileRepository.findById(SOUGHT_ID));
+    Assertions.assertThrows(InvalidDataAccessApiUsageException.class,
+        () -> profileRepository.findById(SOUGHT_ID));
+  }
+
+  @Test
+  public void whenSave_withAlteredExistingTag_thenThrowException() {
+    Tag persistedTag = ModelTestHelper.createTag(1);
+    String persistedTagName = persistedTag.getName();
+    Long persistedTagId = (Long) testEntityManager.persistAndGetId(persistedTag);
+    testEntityManager.flush();
+
+    Tag alteredExistingTag = ModelTestHelper.createTag(2);
+    // to make sure that the name attribute would actually change
+    Assertions.assertNotEquals(persistedTagName, alteredExistingTag.getName(), "Test is faulty");
+    alteredExistingTag.setId(persistedTagId);
+
+    Profile profile = ModelTestHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
+    profile.setTags(List.of(alteredExistingTag));
+
+    Assertions.assertThrows(InvalidDataAccessApiUsageException.class,
+        () -> profileRepository.save(profile));
+  }
+
+  @Test
+  public void whenSaveNewProfile_withNewTag_thenPersistNewTag() {
+    Tag newTag = ModelTestHelper.createTag(1);
+
+    Profile profile = ModelTestHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
+    List<Tag> tagsToAdd = new ArrayList<>();
+    tagsToAdd.add(newTag);
+    profile.setTags(tagsToAdd);
+
+    Profile persistedProfile = profileRepository.save(profile);
+    Assertions.assertEquals(newTag.getName(), persistedProfile.getTags().get(0).getName());
+  }
+
+  @Test
+  public void whenSaveManagedProfile_withNewTag_thenPersistNewTag() {
+    Profile profile = ModelTestHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
+    Profile persistedProfile = testEntityManager.persistAndFlush(profile);
+
+    Tag newTag = ModelTestHelper.createTag(1);
+    Tag persistedTag = testEntityManager.persistAndFlush(newTag);
+    List<Tag> tagsToAdd = new ArrayList<>();
+    tagsToAdd.add(persistedTag);
+    persistedProfile.setTags(tagsToAdd);
+
+    Profile updatedProfile = profileRepository.save(persistedProfile);
+    Assertions.assertEquals(newTag.getName(), updatedProfile.getTags().get(0).getName());
   }
 
   /**
