@@ -94,11 +94,18 @@ public class ModelTestHelper {
     List<Tag> tags = new ArrayList<>();
 
     for (int i = 0; i < amount; i++) {
-      Tag tag = new Tag();
-      tag.setName("Tag" + i);
-      tags.add(tag);
+      tags.add(createTag(i));
     }
 
     return tags;
+  }
+
+  /**
+   * @param uniqueNumber number used for generation of Tag name to satisfy uniqueness constraints
+   */
+  public static Tag createTag(int uniqueNumber) {
+    Tag tag = new Tag();
+    tag.setName("Tag" + uniqueNumber);
+    return  tag;
   }
 }

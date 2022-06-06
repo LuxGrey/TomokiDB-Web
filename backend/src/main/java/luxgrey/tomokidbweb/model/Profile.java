@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,7 +45,7 @@ public class Profile {
   @ElementCollection
   private List<Weblink> weblinks = new ArrayList<>();
 
-  @ManyToMany
+  @ManyToMany(cascade = CascadeType.PERSIST)
   // define unique constraint to prevent duplicates of profile-tag relationships
   // unique constraint is only used during DDL generation
   @JoinTable(name = "profile_tags",
