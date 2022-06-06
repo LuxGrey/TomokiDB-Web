@@ -2,13 +2,13 @@ package luxgrey.tomokidbweb.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import luxgrey.tomokidbweb.dto.ProfileDTOPostOrPut;
 import luxgrey.tomokidbweb.dto.ProfileDTOShort;
 import luxgrey.tomokidbweb.exception.InvalidProfileTagsException;
+import luxgrey.tomokidbweb.mapper.ProfileMapper;
 import luxgrey.tomokidbweb.model.Profile;
 import luxgrey.tomokidbweb.model.Tag;
 import luxgrey.tomokidbweb.repository.ProfileRepository;
@@ -23,19 +23,22 @@ public class ProfileService {
 
   private final ProfileRepository profileRepository;
   private final TagRepository tagRepository;
+  private final ProfileMapper profileMapper;
 
   @Autowired
   public ProfileService(
       ProfileRepository profileRepository,
-      TagRepository tagRepository
+      TagRepository tagRepository,
+      ProfileMapper profileMapper
   ) {
     this.profileRepository = profileRepository;
     this.tagRepository = tagRepository;
+    this.profileMapper = profileMapper;
   }
 
   public Profile createProfile(ProfileDTOPostOrPut profileDTOPostOrPut)
       throws InvalidProfileTagsException {
-    Profile profileToPersist = ProfileDTOPostOrPut.toProfile(profileDTOPostOrPut);
+    Profile profileToPersist = this.profileMapper.toProfile(profileDTOPostOrPut);
     profileToPersist.setTags(
         validateAndBuildProfileTags(
             profileDTOPostOrPut.getTagIdsExisting(),
@@ -52,7 +55,7 @@ public class ProfileService {
 
   public Page<ProfileDTOShort> getProfilesPageByAliasAndTagIds(
       int pageStart, int pageSize, String aliasName, Collection<Long> tagIds) {
-    return ProfileDTOShort.toProfileDTOPage(
+    return this.profileMapper.toProfileDTOShortPage(
         profileRepository.findByAliasAndTagIds(
             PageRequest.of(pageStart, pageSize),
             aliasName,
