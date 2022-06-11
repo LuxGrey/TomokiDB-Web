@@ -21,7 +21,7 @@ public class TagRepositoryIntegrationTests {
 
   @Test
   public void whenFindByIdIn_withDuplicateIds_thenReturnUniqueTags() {
-    List<Tag> tags = ModelTestHelper.createTags(5);
+    List<Tag> tags = TestModelHelper.createTags(5);
     List<Long> persistedTagIds = new ArrayList<>();
     for (Tag tag : tags) {
       persistedTagIds.add((Long) testEntityManager.persistAndGetId(tag));
@@ -38,7 +38,7 @@ public class TagRepositoryIntegrationTests {
 
   @Test
   public void whenFindByIdName_withDuplicateNames_thenReturnUniqueTags() {
-    List<Tag> tags = ModelTestHelper.createTags(5);
+    List<Tag> tags = TestModelHelper.createTags(5);
     List<String> persistedTagNames = new ArrayList<>();
     for (Tag tag : tags) {
       testEntityManager.persistAndGetId(tag);

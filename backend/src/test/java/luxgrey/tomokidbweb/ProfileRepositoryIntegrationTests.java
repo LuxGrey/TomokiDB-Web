@@ -34,7 +34,7 @@ public class ProfileRepositoryIntegrationTests {
     final int AMOUNT_PROFILES = 10;
     final int PAGE = 0;
     final int PAGE_SIZE = 5;
-    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
+    List<Profile> profiles = TestModelHelper.createProfilesWithAliasesAndWeblinks(
         AMOUNT_PROFILES, 2, 3);
     for (Profile p : profiles) {
       testEntityManager.persist(p);
@@ -56,7 +56,7 @@ public class ProfileRepositoryIntegrationTests {
     final int AMOUNT_PROFILES = 10;
     final int PAGE = 20;
     final int PAGE_SIZE = 5;
-    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
+    List<Profile> profiles = TestModelHelper.createProfilesWithAliasesAndWeblinks(
         AMOUNT_PROFILES, 2, 3);
     for (Profile p : profiles) {
       testEntityManager.persist(p);
@@ -78,7 +78,7 @@ public class ProfileRepositoryIntegrationTests {
     final int AMOUNT_PROFILES = 10;
     final int PAGE = 0;
     final int PAGE_SIZE = 5;
-    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
+    List<Profile> profiles = TestModelHelper.createProfilesWithAliasesAndWeblinks(
         AMOUNT_PROFILES, 2, 3);
     for (Profile p : profiles) {
       testEntityManager.persist(p);
@@ -100,7 +100,7 @@ public class ProfileRepositoryIntegrationTests {
     final int AMOUNT_PROFILES = 10;
     final int PAGE = 20;
     final int PAGE_SIZE = 5;
-    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
+    List<Profile> profiles = TestModelHelper.createProfilesWithAliasesAndWeblinks(
         AMOUNT_PROFILES, 2, 3);
     for (Profile p : profiles) {
       testEntityManager.persist(p);
@@ -211,7 +211,7 @@ public class ProfileRepositoryIntegrationTests {
 
   @Test
   public void whenFindById_withExistingId_thenReturnCorrectProfile() {
-    Profile expectedProfile = ModelTestHelper.createProfileWithAliasesAndWeblinks(1, 2, 1);
+    Profile expectedProfile = TestModelHelper.createProfileWithAliasesAndWeblinks(1, 2, 1);
     testEntityManager.persistAndFlush(expectedProfile);
     final Long SOUGHT_ID = expectedProfile.getId();
 
@@ -223,7 +223,7 @@ public class ProfileRepositoryIntegrationTests {
 
   @Test
   public void whenFindById_withExistingId_thenReturnProfileWithEagerLoadedRelationships() {
-    Profile expectedProfile = ModelTestHelper.createProfileWithAliasesAndWeblinks(1, 2, 1);
+    Profile expectedProfile = TestModelHelper.createProfileWithAliasesAndWeblinks(1, 2, 1);
     testEntityManager.persistAndFlush(expectedProfile);
     final Long SOUGHT_ID = expectedProfile.getId();
 
@@ -263,17 +263,17 @@ public class ProfileRepositoryIntegrationTests {
 
   @Test
   public void whenSave_withAlteredExistingTag_thenThrowException() {
-    Tag persistedTag = ModelTestHelper.createTag(1);
+    Tag persistedTag = TestModelHelper.createTag(1);
     String persistedTagName = persistedTag.getName();
     Long persistedTagId = (Long) testEntityManager.persistAndGetId(persistedTag);
     testEntityManager.flush();
 
-    Tag alteredExistingTag = ModelTestHelper.createTag(2);
+    Tag alteredExistingTag = TestModelHelper.createTag(2);
     // to make sure that the name attribute would actually change
     Assertions.assertNotEquals(persistedTagName, alteredExistingTag.getName(), "Test is faulty");
     alteredExistingTag.setId(persistedTagId);
 
-    Profile profile = ModelTestHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
+    Profile profile = TestModelHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
     profile.setTags(List.of(alteredExistingTag));
 
     Assertions.assertThrows(InvalidDataAccessApiUsageException.class,
@@ -282,9 +282,9 @@ public class ProfileRepositoryIntegrationTests {
 
   @Test
   public void whenSaveNewProfile_withNewTag_thenPersistNewTag() {
-    Tag newTag = ModelTestHelper.createTag(1);
+    Tag newTag = TestModelHelper.createTag(1);
 
-    Profile profile = ModelTestHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
+    Profile profile = TestModelHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
     List<Tag> tagsToAdd = new ArrayList<>();
     tagsToAdd.add(newTag);
     profile.setTags(tagsToAdd);
@@ -295,10 +295,10 @@ public class ProfileRepositoryIntegrationTests {
 
   @Test
   public void whenSaveManagedProfile_withNewTag_thenPersistNewTag() {
-    Profile profile = ModelTestHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
+    Profile profile = TestModelHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
     Profile persistedProfile = testEntityManager.persistAndFlush(profile);
 
-    Tag newTag = ModelTestHelper.createTag(1);
+    Tag newTag = TestModelHelper.createTag(1);
     Tag persistedTag = testEntityManager.persistAndFlush(newTag);
     List<Tag> tagsToAdd = new ArrayList<>();
     tagsToAdd.add(persistedTag);
@@ -335,9 +335,9 @@ public class ProfileRepositoryIntegrationTests {
       int[] profileIndicesWithSoughtAlias,
       int[] soughtTagIndices,
       int[] profileIndicesWithSoughtTags) {
-    List<Profile> profiles = ModelTestHelper.createProfilesWithAliasesAndWeblinks(
+    List<Profile> profiles = TestModelHelper.createProfilesWithAliasesAndWeblinks(
         amountProfiles, 2, 3);
-    List<Tag> tags = ModelTestHelper.createTags(amountTags);
+    List<Tag> tags = TestModelHelper.createTags(amountTags);
 
     for (Tag t : tags) {
       // persist earlier to assign IDs
