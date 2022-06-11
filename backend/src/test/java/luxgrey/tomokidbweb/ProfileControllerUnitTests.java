@@ -111,6 +111,35 @@ public class ProfileControllerUnitTests {
   }
 
   @Test
+  public void whenDeleteProfile_withValidId_thenStatus200() throws Exception {
+    final Long EXISTING_PROFILE_ID = 1L;
+    Mockito.when(profileService.deleteProfile(EXISTING_PROFILE_ID))
+        .thenReturn(true);
+
+    this.mockMvc
+        .perform(MockMvcRequestBuilders.delete(PROFILES_BASE_URL + "/" + EXISTING_PROFILE_ID))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  public void whenDeleteProfile_withNonExistingId_thenStatus404() throws Exception {
+    final Long NON_EXISTING_PROFILE_ID = 100L;
+    Mockito.when(profileService.deleteProfile(NON_EXISTING_PROFILE_ID))
+        .thenReturn(false);
+
+    this.mockMvc
+        .perform(MockMvcRequestBuilders.delete(PROFILES_BASE_URL + "/" + NON_EXISTING_PROFILE_ID))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  public void whenDeleteProfile_withNegativeId_thenStatus400() throws Exception {
+    this.mockMvc
+        .perform(MockMvcRequestBuilders.delete(PROFILES_BASE_URL + "/-1"))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
   public void whenGetProfilesPageByAliasAndTagIds_withoutPageOrPageSize_thenStatus400()
       throws Exception {
     this.mockMvc

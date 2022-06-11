@@ -194,6 +194,28 @@ public class ProfileServiceUnitTests {
   }
 
   @Test
+  public void whenDeleteProfile_withExistingId_thenTrueReturned() {
+    final Long EXISTING_ID = 100L;
+
+    Mockito.when(
+        profileRepository.existsById(EXISTING_ID)
+    ).thenReturn(true);
+
+    Assertions.assertTrue(profileService.deleteProfile(EXISTING_ID));
+  }
+
+  @Test
+  public void whenDeleteProfile_withNonExistingId_thenFalseReturned() {
+    final Long NON_EXISTING_ID = 100L;
+
+    Mockito.when(
+        profileRepository.existsById(NON_EXISTING_ID)
+    ).thenReturn(false);
+
+    Assertions.assertFalse(profileService.deleteProfile(NON_EXISTING_ID));
+  }
+
+  @Test
   public void whenGetProfilesPage_thenProfilesPageReturned() {
     final String SOUGHT_ALIAS_NAME = "SpecialAlias";
     final List<Long> SOUGHT_TAG_IDS = Arrays.asList(1L, 3L);

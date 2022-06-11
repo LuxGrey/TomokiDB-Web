@@ -7,6 +7,7 @@ import java.util.Set;
 import luxgrey.tomokidbweb.dto.ProfileDTOPostOrPut;
 import luxgrey.tomokidbweb.model.Profile;
 import luxgrey.tomokidbweb.model.Tag;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -120,6 +121,40 @@ public class ProfileControllerIntegrationTests {
         .andExpect(MockMvcResultMatchers.jsonPath("tags").isArray())
         .andExpect(MockMvcResultMatchers.jsonPath("tags.size()").value(AMOUNT_TAGS))
         .andExpect(MockMvcResultMatchers.jsonPath("tags[0].profiles").isEmpty());
+  }
+
+  @Test
+  public void givenProfile_whenDeleteProfile_withValidId_thenProfileDeletedAndStatus200()
+      throws Exception {
+    Profile existingProfile = TestModelHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
+    Long existingProfileId = (Long) testEntityManager.persistAndGetId(existingProfile);;
+    testEntityManager.flush();
+
+    // record exists in database
+    Assertions.assertNotNull(testEntityManager.find(Profile.class, existingProfileId));
+
+    this.mockMvc
+        .perform(MockMvcRequestBuilders.delete(PROFILES_BASE_URL + "/" + existingProfileId))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+
+    // record no longer exists in database
+    Assertions.assertNull(testEntityManager.find(Profile.class, existingProfileId));
+  }
+
+  @Test
+  public void whenDeleteProfile_withNonExistingId_thenStatus404() throws Exception {
+    final Long NON_EXISTING_PROFILE_ID = 100L;
+
+    this.mockMvc
+        .perform(MockMvcRequestBuilders.delete(PROFILES_BASE_URL + "/" + NON_EXISTING_PROFILE_ID))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  public void whenDeleteProfile_withNegativeId_thenStatus400() throws Exception {
+    this.mockMvc
+        .perform(MockMvcRequestBuilders.delete(PROFILES_BASE_URL + "/-1"))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
   @Test

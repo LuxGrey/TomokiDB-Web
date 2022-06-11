@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,7 @@ public class ProfileController {
 
   @PostMapping(path = "", consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @Operation(summary = "Create a profile")
+  @Operation(summary = "Create a Profile")
   @ApiResponses({
       @ApiResponse(responseCode = "201", description = "created"),
       @ApiResponse(responseCode = "400", description = "bad request")
@@ -62,7 +63,7 @@ public class ProfileController {
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "ok"),
       @ApiResponse(responseCode = "400", description = "bad request"),
-      @ApiResponse(responseCode = "404", description = "not found"),
+      @ApiResponse(responseCode = "404", description = "not found")
   })
   public ResponseEntity<?> getProfile(@PathVariable final Long id) {
     if (id < 1L) {
@@ -75,6 +76,25 @@ public class ProfileController {
     }
 
     return ResponseEntity.status(HttpStatus.OK).body(optionalProfile.get());
+  }
+
+  @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Delete a Profile")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "ok"),
+      @ApiResponse(responseCode = "400", description = "bad request"),
+      @ApiResponse(responseCode = "404", description = "not found")
+  })
+  public ResponseEntity<?> deleteProfile(@PathVariable final Long id) {
+    if (id < 1L) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+
+    if (!profileService.deleteProfile(id)) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(null);
   }
 
   @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)

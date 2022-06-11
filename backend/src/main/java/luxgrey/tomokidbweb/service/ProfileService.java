@@ -53,6 +53,19 @@ public class ProfileService {
     return profileRepository.findById(id);
   }
 
+  /**
+   * @return a boolean that expresses whether a Profile with the provided id could be found
+   * and was deleted (true) or not (false)
+   */
+  public boolean deleteProfile(Long id) {
+    if (!profileRepository.existsById(id)) {
+      return false;
+    }
+
+    profileRepository.deleteById(id);
+    return true;
+  }
+
   public Page<ProfileDTOShort> getProfilesPageByAliasAndTagIds(
       int pageStart, int pageSize, String aliasName, Collection<Long> tagIds) {
     return this.profileMapper.toProfileDTOShortPage(
