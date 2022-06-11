@@ -45,11 +45,11 @@ public class ProfileController {
       @ApiResponse(responseCode = "400", description = "bad request")
   })
   public ResponseEntity<?> createProfile(
-      @Valid @RequestBody final ProfileDTOPostOrPut profileDTONoId) {
+      @Valid @RequestBody final ProfileDTOPostOrPut profileDTO) {
 
     Profile createdProfile = null;
     try {
-      createdProfile = profileService.createProfile(profileDTONoId);
+      createdProfile = profileService.createProfile(profileDTO);
     } catch (InvalidProfileTagsException e) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }

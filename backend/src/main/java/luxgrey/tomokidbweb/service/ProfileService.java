@@ -38,7 +38,7 @@ public class ProfileService {
 
   public Profile createProfile(ProfileDTOPostOrPut profileDTOPostOrPut)
       throws InvalidProfileTagsException {
-    Profile profileToPersist = this.profileMapper.toProfile(profileDTOPostOrPut);
+    Profile profileToPersist = profileMapper.toProfile(profileDTOPostOrPut);
     profileToPersist.setTags(
         validateAndBuildProfileTags(
             profileDTOPostOrPut.getTagIdsExisting(),

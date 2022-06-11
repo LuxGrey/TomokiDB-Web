@@ -41,7 +41,7 @@ public class ProfileControllerUnitTests {
   @Test
   public void givenProfile_whenGetProfile_withValidId_thenStatus200() throws Exception {
     final Long SOUGHT_PROFILE_ID = 1L;
-    Profile profile = ModelTestHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
+    Profile profile = TestModelHelper.createProfileWithAliasesAndWeblinks(2, 3, 1);
     Mockito.when(profileService.getProfile(SOUGHT_PROFILE_ID))
         .thenReturn(Optional.of(profile));
 
@@ -71,7 +71,7 @@ public class ProfileControllerUnitTests {
   @Test
   public void givenProfiles_whenGetProfilesPageByAliasAndTagIds_withPageAndPageSize_thenStatus200()
       throws Exception {
-    List<ProfileDTOShort> profileDTOShortList = ModelTestHelper.createProfileDTOShortsWithAliases(
+    List<ProfileDTOShort> profileDTOShortList = TestModelHelper.createProfileDTOShortsWithAliases(
         5, 2, true);
     Page<ProfileDTOShort> profileDTOShortPage = new PageImpl<>(profileDTOShortList);
     Mockito.when(profileService.getProfilesPageByAliasAndTagIds(0, 5, null, null))
