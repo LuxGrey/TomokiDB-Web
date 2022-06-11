@@ -6,6 +6,10 @@ package luxgrey.tomokidbweb.exception;
  */
 public class InvalidProfileTagsException extends Exception {
 
+  public InvalidProfileTagsException() {
+    super();
+  }
+
   public InvalidProfileTagsException(String message) {
     super(message);
   }
